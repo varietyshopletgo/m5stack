@@ -1,0 +1,28 @@
+from m5stack import *
+from m5ui import *
+from uiflow import *
+from m5mqtt import M5mqtt
+
+setScreenColor(0x222222)
+
+
+
+
+
+label0 = M5TextBox(117, 99, "Text", lcd.FONT_DejaVu40, 0xFFFFFF, rotate=0)
+
+def fun_topicA_(topic_data):
+  # global params
+  if 'on' == topic_data:
+    setScreenColor(0xffff66)
+    label0.setText(str(topic_data))
+  else:
+    setScreenColor(0xff0000)
+    label0.setText(str(topic_data))
+  pass
+
+
+m5mqtt = M5mqtt('M5Stack', '[ユーザ名].cloud.shiftr.io', 1883, '[ユーザ名]', '[Secret]', 300)
+m5mqtt.subscribe(str('topicA'), fun_topicA_)
+m5mqtt.start()
+label0.setText('MQTT connectiong')
