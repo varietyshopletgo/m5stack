@@ -1,0 +1,24 @@
+#いわゆるLチカですね
+#回路はこちらのサイトを参考にさせていただきました！
+#http://ifdl.jp/akita/class/index.php?plugin=attach&refer=FrontPage&openfile=19DE_bidai.pdf
+
+from m5stack import *
+from m5ui import *
+from uiflow import *
+from easyIO import *
+import time
+
+setScreenColor(0x222222)
+
+
+
+
+
+
+
+while True:
+  digitalWrite(5, 1)
+  wait(0.5)
+  digitalWrite(5, 0)
+  wait(0.5)
+  wait_ms(2)
