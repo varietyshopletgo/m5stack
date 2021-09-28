@@ -1,0 +1,17 @@
+#光センサーの値を表示
+#参考はこちら
+#http://ifdl.jp/akita/class/index.php?plugin=attach&refer=FrontPage&openfile=19DE_bidai.pdf
+
+from m5stack import *
+from m5ui import *
+from uiflow import *
+from easyIO import *
+
+setScreenColor(0x222222)
+
+label0 = M5TextBox(144, 112, "Text", lcd.FONT_Default, 0xFFFFFF, rotate=0)
+
+
+while True:
+  label0.setText(str(analogRead(36)))
+  wait_ms(2)
