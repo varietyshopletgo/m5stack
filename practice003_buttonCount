@@ -1,0 +1,57 @@
+from m5stack import *
+from m5ui import *
+from uiflow import *
+
+setScreenColor(0x222222)
+
+
+count = None
+
+
+label0 = M5TextBox(144, 112, "Text", lcd.FONT_DejaVu24, 0xFFFFFF, rotate=0)
+
+from numbers import Number
+
+
+
+def buttonA_wasReleased():
+  global count
+  count = (count if isinstance(count, Number) else 0) + 1
+  label0.setPosition(10, 100)
+  setScreenColor(0xff0000)
+  label0.setColor(0xffff00)
+  label0.setFont(lcd.FONT_DejaVu24)
+  label0.setText(str((str('Count Up:') + str(count))))
+  pass
+btnA.wasReleased(buttonA_wasReleased)
+
+def buttonB_wasReleased():
+  global count
+  count = (count if isinstance(count, Number) else 0) + -1
+  if count <= 0:
+    count = 0
+  label0.setPosition(10, 100)
+  setScreenColor(0x33cc00)
+  label0.setColor(0xffff00)
+  label0.setFont(lcd.FONT_DejaVu24)
+  label0.setText(str((str('Count Down:') + str(count))))
+  pass
+btnB.wasReleased(buttonB_wasReleased)
+
+def buttonC_pressFor():
+  global count
+  count = 0
+  label0.setPosition(10, 100)
+  setScreenColor(0x000000)
+  label0.setColor(0xffffff)
+  label0.setFont(lcd.FONT_DejaVu24)
+  label0.setText(str((str('Count Clear!:') + str(count))))
+  pass
+btnC.pressFor(0.8, buttonC_pressFor)
+
+
+count = 0
+setScreenColor(0x000000)
+label0.setText('Button Click!')
+while True:
+  wait_ms(2)
