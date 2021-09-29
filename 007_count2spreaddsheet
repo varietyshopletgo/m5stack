@@ -1,0 +1,71 @@
+#GAS側でエラーになっちゃう
+#参考サイトhttps://qiita.com/chocomo/items/e5506d00cc82790d2b4d
+
+from m5stack import *
+from m5ui import *
+from uiflow import *
+import json
+
+import wifiCfg
+import urequests
+import time
+
+setScreenColor(0x222222)
+
+
+count = None
+JSONdata = None
+
+wifiCfg.doConnect('[SSID]', '[Password]')
+label0 = M5TextBox(0, 100, "Text", lcd.FONT_DejaVu40, 0xFFFFFF, rotate=0)
+
+from numbers import Number
+
+
+
+def buttonB_wasPressed():
+  global count, JSONdata
+  JSONdata = json.dumps(({'Test_Num':0,'Test_Text':'test'}))
+  lcd.clear()
+  lcd.print(JSONdata, 0, 0, 0xffffff)
+  try:
+    req = urequests.request(method='POST', url='https://script.google.com/macros/s/AKfycbzMXgHYHIKiTxXnHWW17M_4XgDNjRWm8XTiiuxWeZHSjC__k0nm/exec',json=JSONdata, headers={'Content-Type':'application/json'})
+    lcd.fill(0x33ff33)
+    lcd.print('OK', 0, 0, 0xffffff)
+    wait(5)
+  except:
+    lcd.fill(0xff0000)
+    lcd.print('NG', 0, 0, 0xffffff)
+    wait(5)
+  lcd.clear()
+  lcd.print('PRESS', 0, 0, 0xffffff)
+  pass
+btnB.wasPressed(buttonB_wasPressed)
+
+def buttonA_wasPressed():
+  global count, JSONdata
+  count = (count if isinstance(count, Number) else 0) + 1
+  label0.setPosition(10, 0)
+  setScreenColor(0xff0000)
+  label0.setColor(0xffffff)
+  label0.setText(str((str('Count Up:') + str(count))))
+  pass
+btnA.wasPressed(buttonA_wasPressed)
+
+def buttonC_wasPressed():
+  global count, JSONdata
+  count = (count if isinstance(count, Number) else 0) + -1
+  if count <= 0:
+    count = 0
+  label0.setPosition(10, 100)
+  setScreenColor(0x33ff33)
+  label0.setColor(0xffff00)
+  label0.setText(str((str('Count Down:') + str(count))))
+  pass
+btnC.wasPressed(buttonC_wasPressed)
+
+
+count = 0
+if wifiCfg.wlan_sta.isconnected():
+  setScreenColor(0x33ffff)
+label0.setText('Button Click!')
