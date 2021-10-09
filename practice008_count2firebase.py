@@ -5,6 +5,8 @@ from uiflow import *
 from numbers import Number
 
 #スクリーンカラーをセット
+
+label0 = M5TextBox(51, 112, "Text", lcd.FONT_DejaVu40, 0xFFFFFF, rotate=0)
 setScreenColor(0x222222)
 label0.setPosition(10, 100)
 
@@ -17,7 +19,7 @@ import time as MOD_TIME
 #Connect to Wifi
 GLOB_WLAN=MOD_NETWORK.WLAN(MOD_NETWORK.STA_IF)
 GLOB_WLAN.active(True)
-GLOB_WLAN.connect("[SSID]", "[PASSWD]")
+GLOB_WLAN.connect("SPWN_N36_2daa41", "0357f29b86b91")
 
 while not GLOB_WLAN.isconnected():
   pass
@@ -29,11 +31,10 @@ sys.path.append('/flash/res')
 
 #プロジェクトをセット
 import ufirebase as firebase
-firebase.setURL("https://[プロジェクト名].firebaseio.com/")
+firebase.setURL("https://m5data-259df-default-rtdb.firebaseio.com/")
 
 #button操作
 count = None
-label0 = M5TextBox(51, 112, "Text", lcd.FONT_DejaVu40, 0xFFFFFF, rotate=0)
 
 #buttonAの動き
 def buttonA_wasPressed():
@@ -59,7 +60,8 @@ btnC.wasPressed(buttonC_wasPressed)
 def buttonB_wasPressed():
   global count
   lcd.clear()
-  firebase.put("/M5stack/counter", count)
+  firebase.put("/M5Stack/counter", count)
   label0.setText(str((str('Count Send:') + str(count))))
   
 btnB.wasPressed(buttonB_wasPressed)
+
