@@ -1,0 +1,50 @@
+from m5stack import *
+from m5ui import *
+from uiflow import *
+from m5mqtt import M5mqtt
+import network as MOD_NETWORK
+import machine
+
+#背景色とスピーカーのボリュームとデフォルトの顔のファイルを設定
+setScreenColor(0x222222)
+speaker.setVolume(0.5)
+image0 = M5Img(0, 0, "res/face_normal.jpg", True)
+
+#Wifiにつなぐ
+GLOB_WLAN=MOD_NETWORK.WLAN(MOD_NETWORK.STA_IF)
+GLOB_WLAN.active(True)
+GLOB_WLAN.connect("[SSID]", "[PASSWD]")
+
+#shiftr.ioの設定
+m5mqtt = M5mqtt('M5Stack', '[インスタンス名].cloud.shiftr.io', 1883, '[ユーザ名]', '[Secret]', 300)
+m5mqtt.subscribe(str('topicA'), fun_topicA_)
+m5mqtt.start()
+#label0.setText('MQTT connectiong')
+
+#受信したときの一連の流れ
+def fun_topicA_(topic_data):
+  # global params
+  if 'on' == topic_data:
+    image0.changeImg("res/face_notice.jpg")
+    speaker.tone(1400, 50)
+    wait_ms(100)
+    speaker.tone(700, 50)
+    wait_ms(100)
+    speaker.tone(1400, 50)
+    wait_ms(100)    
+    agree()
+  pass
+
+#うなづいてもらう用の関数
+def agree():
+  PWM0 = machine.PWM(2, freq=50, duty=7.5, timer=0)
+  image0.changeImg("res/face_called.jpg")  
+  wait_ms(800)
+  PWM0 = machine.PWM(2, freq=50, duty=6, timer=0)
+  wait_ms(800)
+  PWM0 = machine.PWM(2, freq=50, duty=7.5, timer=0)
+  wait_ms(800)
+  PWM0 = machine.PWM(2, freq=50, duty=6, timer=0)
+  wait_ms(800)
+  PWM0 = machine.PWM(2, freq=50, duty=7.25, timer=0)
+  image0.changeImg("res/face_normal.jpg")
